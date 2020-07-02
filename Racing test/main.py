@@ -49,7 +49,7 @@ def crash():
     message_display('You Crashed')
 
 def game_loop():
-    x = (display_width * 0.45)
+    x = (display_width * 0.47)
     y = (display_height * 0.8)
 
     x_change = 0
@@ -82,14 +82,19 @@ def game_loop():
         x += x_change
                 
         gameDisplay.fill(white)
+
+        #drawing borders
+        pygame.draw.rect(gameDisplay, black, [display_width - 5 , 0 , 5,  display_height])
+        pygame.draw.rect(gameDisplay, black, [0, 0 , 5,  display_height])
         
         #things(thingx, thingy, thingw, thingh, color):
         things(thing_startx, thing_starty, thing_width, thing_height, black)
         thing_starty += thing_speed
         car(x, y)
+        
 
         #car crossing boundries and crashing
-        if x > display_width - car_width or x < 0:
+        if x + car_width > display_width - 5 or x < 5:
             crash()
 
         #thing reaching the bottom and restarting from the top
