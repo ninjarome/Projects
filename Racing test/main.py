@@ -1,5 +1,6 @@
 import pygame
 import time
+import random
 
 display_width = 800
 display_height = 600
@@ -13,12 +14,17 @@ blue = (0, 0, 255)
 carImg = pygame.image.load('car.png')
 
 car_width = 31
+car_height = 79
 
 pygame.init()
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Racing test')
 clock = pygame.time.Clock()
 
+def things(thingx, thingy, thingw, thingh, color):
+    pygame.draw.rect(gameDisplay, color, [thingx, thingy, thingw, thingh])
+
+#car dislpay
 def car(x, y):
     gameDisplay.blit(carImg, (x, y))
 
@@ -26,6 +32,7 @@ def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
 
+#pausing game for 2 secs and showing text
 def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf', 115)
     TextSurf, TextRect = text_objects(text, largeText)
@@ -46,6 +53,12 @@ def game_loop():
     y = (display_height * 0.8)
 
     x_change = 0
+
+    thing_startx = random.randrange(0, display_width)
+    thing_starty = -600
+    thing_speed = 7
+    thing_width = 100
+    thing_height = 100
 
     gameExit = False
 
@@ -68,11 +81,26 @@ def game_loop():
 
         x += x_change
                 
-        gameDisplay.fill(white)        
+        gameDisplay.fill(white)
+        
+        #things(thingx, thingy, thingw, thingh, color):
+        things(thing_startx, thing_starty, thing_width, thing_height, black)
+        thing_starty += thing_speed
         car(x, y)
 
+        #car crossing boundries and crashing
         if x > display_width - car_width or x < 0:
             crash()
+
+        #thing reaching the bottom and restarting from the top
+        if thing_starty > display_height:
+            thing_starty = 0 - thing_height
+            thing_startx = random.randrange(0, display_width)
+
+        #if the car crashes into thing
+        if y < thing_starty + thing_height and y + car_height > thing_starty:
+            if x > thing_startx and x < thing_startx + thing_width or x + car_width > thing_startx and x + car_width < thing_startx + thing_width:
+                crash()
         
         pygame.display.update()
         clock.tick(60)
