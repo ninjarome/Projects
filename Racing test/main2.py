@@ -12,6 +12,7 @@ green = (0, 255, 0)
 blue = (0, 0, 255)
 
 carImg = pygame.image.load('car.png')
+coneImg = pygame.image.load('cone.png')
 
 car_width = 31
 car_height = 79
@@ -26,8 +27,8 @@ def things_dodged(count):
     text = font.render("Dodged: " + str(count), True, black)
     gameDisplay.blit(text, (5, 0))
 
-def things(thingx, thingy, thingw, thingh, color):
-    pygame.draw.rect(gameDisplay, color, [thingx, thingy, thingw, thingh])
+def things(thingx, thingy):
+    gameDisplay.blit(coneImg, (thingx, thingy))
 
 #car dislpay
 def car(x, y):
@@ -62,8 +63,8 @@ def game_loop():
     thing_startx = random.randrange(0, display_width)
     thing_starty = -600
     thing_speed = 7
-    thing_width = 100
-    thing_height = 100
+    thing_width = 80
+    thing_height = 97
     thing_listy = [-600]
     thing_listx = [random.randrange(0, display_width)]
     spawn = 500
@@ -103,13 +104,13 @@ def game_loop():
         spawn -= 1
 
         if spawn < 1:
-            thing_listy.append(-600)
+            thing_listy.append(random.randrange(-800, 0))
             thing_listx.append(random.randrange(0, display_width))
             spawn = 500
         print(spawn)
 
         for i in range(len(thing_listy)):
-            things(thing_listx[i], thing_listy[i], thing_width, thing_height, black)
+            things(thing_listx[i], thing_listy[i])
             thing_listy[i] += thing_speed
             if thing_listy[i] > display_height:
                 thing_listy[i] = 0 - thing_height
@@ -142,7 +143,7 @@ def game_loop():
 ##                crash()
         
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(100)
 game_loop()
 pygame.quit()
 quit()
