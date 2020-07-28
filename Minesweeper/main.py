@@ -56,6 +56,18 @@ def placeMines():
         mineList = placeMines
     return mineList
 
+def message_display(text):
+    largeText = pygame.font.Font('freesansbold.ttf', 90)
+    TextSurf = largeText.render(text, True, black)
+    TextRect = TextSurf.get_rect()
+    TextRect.center = ((display_width//2), (display_height//2))
+    gameDisplay.blit(TextSurf, TextRect)
+    pygame.display.update()
+
+    time.sleep(2)
+    
+    game_loop()
+    
 pygame.init()
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Sweeper of Bombs')
@@ -96,9 +108,14 @@ def game_loop():
                 for i in butts:
                     if i.isOver(pos):
                         if mines[i.count] == 1:
-                            print("Mine!")
+                            for i in butts:
+                                if mines[i.count] == 1:
+                                    i.color = red
+                            for i in butts:
+                                i.draw(gameDisplay)
+                            message_display("You lose :(")
                         else:
-                            print("Clear!")
+                            print(mines)
 
             if event.type == pygame.MOUSEMOTION:
                 for i in butts:
