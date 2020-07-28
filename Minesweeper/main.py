@@ -12,7 +12,7 @@ green = (0, 255, 0)
 blue = (0, 0, 255)
 
 class button():
-    def __init__(self, color, outline, x,y,width,height, count):
+    def __init__(self, color = None, outline = None, x = 0,y = 0,width = 0,height = 0, count = 0):
         self.color = color
         self.outline = outline
         self.x = x
@@ -43,7 +43,7 @@ class button():
 def placeMines():
     mineList = []
     mines = False
-    for i in range (0, 50):
+    for i in range (100):
         m = random.randrange(0, 15)
         if m < 2:
             mineList.append(1)
@@ -63,13 +63,24 @@ clock = pygame.time.Clock()
 
 def game_loop():
     gameExit = False
-    butt = button(green, blue, 0, 100, 50, 50, 0)
+    #butt = button(green, blue, 0, 100, 50, 50, 0)
+    butts = []
+    x = 0
+    y = 100
+    for i in range(100):
+        butts.append(button(green, blue, x, y, 50, 50, i))
+        if x > 400:
+            x = 0
+            y += 50
+        else:
+            x += 50
     mines = placeMines()
     while not gameExit:
         gameDisplay.fill(black)
         pygame.draw.rect(gameDisplay, white, [0 , 100 , display_width,  display_height])
-
-        butt.draw(gameDisplay)
+        for i in butts:
+            i.draw(gameDisplay)
+        #butt.draw(gameDisplay)
         
         pygame.display.update()
         clock.tick(120)
@@ -82,14 +93,19 @@ def game_loop():
                 quit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if butt.isOver(pos):
-                    print(len(mines))
+                for i in butts:
+                    if i.isOver(pos):
+                        if mines[i.count] == 1:
+                            print("Mine!")
+                        else:
+                            print("Clear!")
 
             if event.type == pygame.MOUSEMOTION:
-                if butt.isOver(pos):
-                    butt.color = blue
-                else:
-                    butt.color = green
+                for i in butts:
+                    if i.isOver(pos):
+                        i.color = blue
+                    else:
+                        i.color = green
 
 
 
