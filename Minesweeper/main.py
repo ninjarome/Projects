@@ -6,10 +6,20 @@ display_width = 500
 display_height = 600
 
 black = (0, 0, 0)
+grey = (127, 127, 127)
 white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
+edges = []
+for i in range(10):
+    edges.append(i)
+    if i in range(1, 9):
+        edges.append(i*10)
+        edges.append(i*10 + 9)
+    edges.append(i+90)
+print(edges)
+
 
 class button():
     def __init__(self, color = None, outline = None, x = 0,y = 0,width = 0,height = 0, count = 0):
@@ -21,6 +31,7 @@ class button():
         self.height = height
         self.count = count
         self.outline = outline
+        self.checked = False
 
     def draw(self,win):
         #Call this method to draw the button on the screen
@@ -55,6 +66,56 @@ def placeMines():
     while not mines:
         mineList = placeMines
     return mineList
+
+def around(count):
+    aroundList = []
+    #top row
+    if count % 10 != 0 and count - 9 > 0:
+        aroundList.append(count - 11)
+    if count - 9 > 0:
+        aroundList.append(count - 10)
+    if (count - 9) % 10 != 0 and count - 9 > 0:
+        aroundList.append(count - 9)
+
+    #middle row    
+    if count % 10 != 0:
+        aroundList.append(count - 1)
+    if (count - 9) % 10 != 0:
+        aroundList.append(count + 1)
+
+    #bottom row    
+    if count % 10 != 0 and count + 9 < 99:
+        aroundList.append(count + 9)
+    if count + 9 < 99:
+        aroundList.append(count + 10)
+    if (count - 9) % 10 != 0 and count + 9 < 99:
+        aroundList.append(count + 11)
+        
+    return aroundList
+    
+
+def search(buttList, minesList, space):
+    if minesList[space.count] == 0:
+        buttList[space.count].checked = True
+        found = 0
+        aroundList = around(space.count)
+        print(space.count)
+        print(space.count in edges)
+        for i in aroundList:
+            if minesList[i] == 1:
+                found += 1
+        print(found)
+        if found == 0:
+             buttList[space.count].color = grey
+        else:
+            buttList[space.count].color = blue
+             
+    else:
+        for i in buttList:
+            if minesList[i.count] == 1:
+                i.color = red
+                i.draw(gameDisplay)
+        message_display("You lose :(")
 
 def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf', 90)
@@ -107,22 +168,14 @@ def game_loop():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i in butts:
                     if i.isOver(pos):
-                        if mines[i.count] == 1:
-                            for i in butts:
-                                if mines[i.count] == 1:
-                                    i.color = red
-                            for i in butts:
-                                i.draw(gameDisplay)
-                            message_display("You lose :(")
-                        else:
-                            print(mines)
+                        search(butts, mines, i)
 
             if event.type == pygame.MOUSEMOTION:
                 for i in butts:
                     if i.isOver(pos):
-                        i.color = blue
+                        i.outline = green
                     else:
-                        i.color = green
+                        i.outline = blue
 
 
 
