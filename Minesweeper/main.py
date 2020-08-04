@@ -99,14 +99,14 @@ def search(buttList, minesList, space):
         buttList[space.count].checked = True
         found = 0
         aroundList = around(space.count)
-        print(space.count)
-        print(space.count in edges)
         for i in aroundList:
             if minesList[i] == 1:
                 found += 1
-        print(found)
         if found == 0:
              buttList[space.count].color = grey
+             for i in aroundList:
+                 if buttList[i].checked == False:
+                     search(buttList, minesList, buttList[i])
         else:
             buttList[space.count].color = blue
              
