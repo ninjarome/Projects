@@ -32,6 +32,7 @@ class button():
         self.count = count
         self.outline = outline
         self.checked = False
+        self.found = None
 
     def draw(self,win):
         #Call this method to draw the button on the screen
@@ -109,6 +110,8 @@ def search(buttList, minesList, space):
                      search(buttList, minesList, buttList[i])
         else:
             buttList[space.count].color = blue
+            space.found = found
+            #gameDisplay.blit(pygame.font.Font('freesansbold.ttf', 50).render(str(found), True, red), pygame.Rect(space.x, space.y, 25, 25))
              
     else:
         for i in buttList:
@@ -121,7 +124,10 @@ def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf', 90)
     TextSurf = largeText.render(text, True, black)
     TextRect = TextSurf.get_rect()
+    print(TextRect)
+    print(TextRect.center)
     TextRect.center = ((display_width//2), (display_height//2))
+    print(TextRect.center)
     gameDisplay.blit(TextSurf, TextRect)
     pygame.display.update()
 
@@ -153,6 +159,8 @@ def game_loop():
         pygame.draw.rect(gameDisplay, white, [0 , 100 , display_width,  display_height])
         for i in butts:
             i.draw(gameDisplay)
+            if i.found:
+                gameDisplay.blit(pygame.font.Font('freesansbold.ttf', 40).render(str(i.found), True, red), pygame.Rect(i.x + 15, i.y + 10, 20, 20))
         #butt.draw(gameDisplay)
         
         pygame.display.update()
