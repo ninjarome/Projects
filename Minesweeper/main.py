@@ -18,7 +18,7 @@ for i in range(10):
         edges.append(i*10)
         edges.append(i*10 + 9)
     edges.append(i+90)
-print(edges)
+#print(edges)
 
 
 class button():
@@ -95,8 +95,10 @@ def around(count):
     return aroundList
     
 
-def search(buttList, minesList, space):
+def search(buttList, minesList, space, safe):
     if minesList[space.count] == 0:
+        if not space.checked:
+            safe.remove(space.count)
         buttList[space.count].checked = True
         found = 0
         aroundList = around(space.count)
@@ -104,14 +106,13 @@ def search(buttList, minesList, space):
             if minesList[i] == 1:
                 found += 1
         if found == 0:
-             buttList[space.count].color = grey
-             for i in aroundList:
-                 if buttList[i].checked == False:
-                     search(buttList, minesList, buttList[i])
+            buttList[space.count].color = grey
+            for i in aroundList:
+                if not buttList[i].checked:
+                    search(buttList, minesList, buttList[i], safe)
         else:
             buttList[space.count].color = blue
             space.found = found
-            #gameDisplay.blit(pygame.font.Font('freesansbold.ttf', 50).render(str(found), True, red), pygame.Rect(space.x, space.y, 25, 25))
              
     else:
         for i in buttList:
@@ -124,10 +125,7 @@ def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf', 90)
     TextSurf = largeText.render(text, True, black)
     TextRect = TextSurf.get_rect()
-    print(TextRect)
-    print(TextRect.center)
     TextRect.center = ((display_width//2), (display_height//2))
-    print(TextRect.center)
     gameDisplay.blit(TextSurf, TextRect)
     pygame.display.update()
 
@@ -146,6 +144,8 @@ def game_loop():
     butts = []
     x = 0
     y = 100
+    mines = placeMines()
+    safe = []
     for i in range(100):
         butts.append(button(green, blue, x, y, 50, 50, i))
         if x > 400:
@@ -153,7 +153,8 @@ def game_loop():
             y += 50
         else:
             x += 50
-    mines = placeMines()
+        if mines[i] == 0:
+            safe.append(i)
     while not gameExit:
         gameDisplay.fill(black)
         pygame.draw.rect(gameDisplay, white, [0 , 100 , display_width,  display_height])
@@ -164,6 +165,8 @@ def game_loop():
         #butt.draw(gameDisplay)
         
         pygame.display.update()
+        if len(safe) == 0:
+            message_display("You Win :)!")
         clock.tick(120)
         
         pos = pygame.mouse.get_pos()
@@ -176,7 +179,8 @@ def game_loop():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i in butts:
                     if i.isOver(pos):
-                        search(butts, mines, i)
+                        search(butts, mines, i, safe)
+                    
 
             if event.type == pygame.MOUSEMOTION:
                 for i in butts:
