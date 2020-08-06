@@ -11,6 +11,7 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
+orange = (255, 170, 0)
 edges = []
 for i in range(10):
     edges.append(i)
@@ -33,6 +34,7 @@ class button():
         self.outline = outline
         self.checked = False
         self.found = None
+        self.flag = False
 
     def draw(self,win):
         #Call this method to draw the button on the screen
@@ -159,6 +161,10 @@ def game_loop():
         gameDisplay.fill(black)
         pygame.draw.rect(gameDisplay, white, [0 , 100 , display_width,  display_height])
         for i in butts:
+            if i.flag and not i.checked:
+                i.color = orange
+            elif not i.flag and not i.checked:
+                i.color = green
             i.draw(gameDisplay)
             if i.found:
                 gameDisplay.blit(pygame.font.Font('freesansbold.ttf', 40).render(str(i.found), True, red), pygame.Rect(i.x + 15, i.y + 10, 20, 20))
@@ -176,11 +182,18 @@ def game_loop():
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1:
                 for i in butts:
                     if i.isOver(pos):
                         search(butts, mines, i, safe)
-                    
+
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2] == 1:
+                for i in butts:
+                    if i.isOver(pos):
+                        if i.flag:
+                            i.flag = False
+                        else:
+                            i.flag = True
 
             if event.type == pygame.MOUSEMOTION:
                 for i in butts:
