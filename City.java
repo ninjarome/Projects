@@ -38,7 +38,7 @@ public class City {
             adjecentAL.add(i);
         }
 
-        System.out.println("city name is " + this.getName() + " or " + this);//printing adjacent cities names
+        /*System.out.println("city name is " + this.getName() + " or " + this);//printing adjacent cities names
         for (City i : this.adjacentCities) {
             System.out.println("adjacent cities is " + i.getName());
         }
@@ -53,15 +53,15 @@ public class City {
         System.out.println(adjecentAL.get(0).getAdjacentCities().size() <= 1);
         System.out.println("adjacent of adjacent is same");
         System.out.println(adjecentAL.get(0).getAdjacentCities().stream().toList().get(0) == this);
-        System.out.println("~~~~~~~~~~~~");
+        System.out.println("~~~~~~~~~~~~");*/
 
         //Check if adjacent
         if (adjecentAL.contains(end)) {
-            System.out.println("YES CAN DRIVE");
+            //System.out.println("YES CAN DRIVE");
             return true;
         //recurs through all connected cities and removes link if not the destination
-        } else if (!(adjecentAL.size() <= 1) || !(adjecentAL.get(0).getAdjacentCities().size() <= 1) || adjecentAL.get(0).getAdjacentCities().stream().toList().get(0) != this) {
-            System.out.println("CONTINUE LOOP");
+        } else {
+            //System.out.println("CONTINUE LOOP");
             for (City city : this.adjacentCities) {
                 if(result){//if it found a match, it will stop recursion
                     break;}
@@ -76,7 +76,7 @@ public class City {
         if(result){
             return true;
         }
-        System.out.println("CANT DRIVE");
+        //System.out.println("CANT DRIVE");
         return false;
     }
 
@@ -92,16 +92,12 @@ public class City {
 
         a.addAdjacentCity(b);
         b.addAdjacentCity(c);
-        c.addAdjacentCity(d);
-        d.addAdjacentCity(e);
-        e.addAdjacentCity(f);
-        f.addAdjacentCity(g);
 
-        System.out.println("a = "+ a);
+        /*System.out.println("a = "+ a);
         System.out.println("b = "+ b);
         System.out.println("c = "+ c);
         System.out.println("d = "+ d);
-        System.out.println("Can a drive to c?");
-        System.out.println(b.canDriveTo(d));
+        System.out.println("Can a drive to c?");*/
+        System.out.println(a.canDriveTo(c));
     }
 }
