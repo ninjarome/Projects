@@ -3,13 +3,18 @@ import React , {useState} from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 
 export default function App() {
-    const [newTask, setNewTask] = useState('');
+    const[newTask, setNewTask] = useState('');
+    const taskInputHandler = (enteredText) => {
+        setNewTask(enteredText);
+    };
     return (
         <View style= {styles.container}>
             <View style = {styles.inputContainer}>
                 <TextInput
                     placeholder = "Task List"
                     style = {styles.input}
+                    onChangeText = {taskInputHandler}
+                    value = {newTask}
                 />
                 <Button title = "+"/> 
             </View>
