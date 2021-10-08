@@ -72,10 +72,13 @@ export default function App() {
       {p1turn == p2turn ? (
       <View styles={score.container}>
         <Text style={styles.title}>And the winner is {winner}</Text>
-        {shown ? (<Button
+        {shown ? (<View>
+          <Button
           title = {"Play again?"}
           onPress = {() => {setP1turn(true); setp1(''); setp2(''); setWinner(''); setShown(false)}}
-        />) : (<Button
+        />
+        <Text style={styles.title}>P1: {p1}{'\n'}P2: {p2}</Text>
+        </View>) : (<Button
           title = {"Reveal winner"}
           onPress = {() => {wincalc(); setShown(true)}}
         />)}
